@@ -4,54 +4,52 @@
  */
 package model;
 
-
 public class KhachHang {
+
     private int maKH;
     private String hoTen;
     private String soDienThoai;
     private String diaChi;
-    
-    // Constructor mặc định
-    public KhachHang() {}
-    
-    // Constructor đầy đủ tham số
+
+    public KhachHang() {
+    }
+
     public KhachHang(int maKH, String hoTen, String soDienThoai, String diaChi) {
         this.maKH = maKH;
         this.hoTen = hoTen;
         this.soDienThoai = soDienThoai;
         this.diaChi = diaChi;
     }
-    
-    // Getter và Setter
-    public int getMaKH() { 
-        return maKH; 
+
+    public int getMaKH() {
+        return maKH;
     }
-    
-    public void setMaKH(int maKH) { 
-        this.maKH = maKH; 
+
+    public void setMaKH(int maKH) {
+        this.maKH = maKH;
     }
-    
-    public String getHoTen() { 
-        return hoTen; 
+
+    public String getHoTen() {
+        return hoTen;
     }
-    
-    public void setHoTen(String hoTen) { 
-        this.hoTen = hoTen; 
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
     }
-    
-    public String getSoDienThoai() { 
-        return soDienThoai; 
+
+    public String getSoDienThoai() {
+        return soDienThoai;
     }
-    
-    public void setSoDienThoai(String soDienThoai) { 
-        this.soDienThoai = soDienThoai; 
+
+    public void setSoDienThoai(String soDienThoai) {
+        this.soDienThoai = soDienThoai;
     }
-    
-    public String getDiaChi() { 
-        return diaChi; 
+
+    public String getDiaChi() {
+        return diaChi;
     }
-    
-    public void setDiaChi(String diaChi) { 
-        this.diaChi = diaChi; 
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
     }
 }

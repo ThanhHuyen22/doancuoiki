@@ -35,9 +35,10 @@ public class MainFramee extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         menuItemKhachHang = new javax.swing.JMenuItem();
         menuItemDichVu = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
         menuItemDonHang = new javax.swing.JMenuItem();
-        menuItemThongKe = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        menuItemThongKe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,18 +54,18 @@ public class MainFramee extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 658, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 191, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 162, Short.MAX_VALUE))
         );
 
-        jMenu3.setText("Quảng Lý");
+        jMenu3.setText("Quản lý danh mục");
 
         menuItemKhachHang.setText("Khách Hàng");
         menuItemKhachHang.addActionListener(new java.awt.event.ActionListener() {
@@ -82,13 +83,21 @@ public class MainFramee extends javax.swing.JFrame {
         });
         jMenu3.add(menuItemDichVu);
 
+        jMenuBar1.add(jMenu3);
+
+        jMenu1.setText("Quản lý đơn hàng");
+
         menuItemDonHang.setText("Đơn hàng");
         menuItemDonHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemDonHangActionPerformed(evt);
             }
         });
-        jMenu3.add(menuItemDonHang);
+        jMenu1.add(menuItemDonHang);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu4.setText("Thống Kê");
 
         menuItemThongKe.setText("Doanh thu");
         menuItemThongKe.addActionListener(new java.awt.event.ActionListener() {
@@ -96,11 +105,8 @@ public class MainFramee extends javax.swing.JFrame {
                 menuItemThongKeActionPerformed(evt);
             }
         });
-        jMenu3.add(menuItemThongKe);
+        jMenu4.add(menuItemThongKe);
 
-        jMenuBar1.add(jMenu3);
-
-        jMenu4.setText("Thống Kê");
         jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
@@ -191,6 +197,7 @@ public class MainFramee extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;

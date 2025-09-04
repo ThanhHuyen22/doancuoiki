@@ -60,6 +60,17 @@ public class KhachHangGUI extends javax.swing.JFrame {
         }
     }
 
+    private void clearForm() {
+        txtMaKH.setText("");
+        txtHoTen.setText("");
+        txtSoDT.setText("");
+        txtDiaChi.setText("");
+    }
+
+    private void loadKhachHang() {
+        loadDataToTable();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -178,6 +189,8 @@ public class KhachHangGUI extends javax.swing.JFrame {
             }
         });
 
+        txtMaKH.setEnabled(false);
+
         txtDiaChi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDiaChiActionPerformed(evt);
@@ -190,15 +203,15 @@ public class KhachHangGUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(128, 128, 128)
-                .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSua, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(btnSua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
-                .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLuu, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(btnLuu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnHuy, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(btnHuy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(113, 113, 113))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -213,7 +226,7 @@ public class KhachHangGUI extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMaKH, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtSoDT, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -285,37 +298,12 @@ public class KhachHangGUI extends javax.swing.JFrame {
         txtDiaChi.setText("");
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void txtHoTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenActionPerformed
+    private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
         // TODO add your handling code here:
-
-    }//GEN-LAST:event_txtHoTenActionPerformed
-
-    private void txtDiaChiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiaChiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDiaChiActionPerformed
-
-    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = tableKhachHang.getSelectedRow();
-        if (selectedRow < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để sửa!");
-            return;
-        }
-
-        int maKH = Integer.parseInt(txtMaKH.getText());
-        String hoTen = txtHoTen.getText();
-        String soDT = txtSoDT.getText();
-        String diaChi = txtDiaChi.getText();
-
-        KhachHang kh = new KhachHang(maKH, hoTen, soDT, diaChi);
-        khachHangDAO.suaKhachHang(kh);
-        javax.swing.JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công!");
-        loadDataToTable();
-
-    }//GEN-LAST:event_btnSuaActionPerformed
+        dispose(); // Đóng form
+    }//GEN-LAST:event_btnHuyActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tableKhachHang.getSelectedRow();
         if (selectedRow < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để xóa!");
@@ -323,42 +311,76 @@ public class KhachHangGUI extends javax.swing.JFrame {
         }
 
         int maKH = (int) tableKhachHang.getValueAt(selectedRow, 0);
+
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận xóa",
+                "Bạn có chắc chắn muốn xóa khách hàng này?",
+                "Xác nhận xóa",
                 javax.swing.JOptionPane.YES_NO_OPTION);
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            khachHangDAO.xoaKhachHang(maKH);
-            javax.swing.JOptionPane.showMessageDialog(this, "Xóa khách hàng thành công!");
-            loadDataToTable();
+            if (khachHangDAO.xoaKhachHang(maKH)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Xóa khách hàng thành công!");
+                loadDataToTable(); // load lại dữ liệu bảng
+                clearForm();       // xóa form nhập
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Xóa khách hàng thất bại!");
+            }
         }
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
-        // TODO add your handling code here:
-        String hoTen = txtHoTen.getText();
-        String soDT = txtSoDT.getText();
-        String diaChi = txtDiaChi.getText();
-        khachHangDAO.luuKhachHang();
-        if (hoTen.isEmpty() || soDT.isEmpty()) {
+        String hoTen = txtHoTen.getText().trim();
+        String sdt = txtSoDT.getText().trim();
+        String diaChi = txtDiaChi.getText().trim();
+
+        if (hoTen.isEmpty() || sdt.isEmpty() || diaChi.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
-        KhachHang kh = new KhachHang();
-        kh.setHoTen(hoTen);
-        kh.setSoDienThoai(soDT);
-        kh.setDiaChi(diaChi);
+        KhachHang kh = new KhachHang(0, hoTen, sdt, diaChi);
+        if (khachHangDAO.themKhachHang(kh)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Thêm thành công!");
+            loadKhachHang();
+            clearForm();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+        }
 
-        khachHangDAO.themKhachHang(kh);
-        javax.swing.JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
-        loadDataToTable();
     }//GEN-LAST:event_btnLuuActionPerformed
 
-    private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
-        // TODO add your handling code here:
-        dispose(); // Đóng form
-    }//GEN-LAST:event_btnHuyActionPerformed
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        String hoTen = txtHoTen.getText().trim();
+        String sdt = txtSoDT.getText().trim();
+        String diaChi = txtDiaChi.getText().trim();
+
+        if (hoTen.isEmpty() || sdt.isEmpty() || diaChi.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        if (txtMaKH.getText().trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng cần sửa!");
+            return;
+        }
+
+        int maKH;
+        try {
+            maKH = Integer.parseInt(txtMaKH.getText().trim());
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Mã KH không hợp lệ!");
+            return;
+        }
+
+        KhachHang kh = new KhachHang(maKH, hoTen, sdt, diaChi);
+        if (khachHangDAO.suaKhachHang(kh)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            loadKhachHang();
+            clearForm();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
 
     private void tableKhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableKhachHangMouseClicked
         // TODO add your handling code here:
@@ -370,6 +392,14 @@ public class KhachHangGUI extends javax.swing.JFrame {
             txtDiaChi.setText(tableKhachHang.getValueAt(selectedRow, 3).toString());
         }
     }//GEN-LAST:event_tableKhachHangMouseClicked
+
+    private void txtHoTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHoTenActionPerformed
+
+    private void txtDiaChiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiaChiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDiaChiActionPerformed
 
     /**
      * @param args the command line arguments
