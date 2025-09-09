@@ -1,90 +1,104 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import model.DichVu;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DichVuDAO {
 
-    // Danh sách dịch vụ (thay thế database)
-    private List<DichVu> danhSachDichVu = new ArrayList<>();
-    private int nextMaDV = 1; // Biến tự tăng mã DV
+    // Kết nối SQL Server
+    private String connectionUrl = "jdbc:sqlserver://DESKTOP-L1OKGPV\\SQLEXPRESS2022:1433;"
+            + "databaseName=QuanLyTiemGiatUi;"
+            + "encrypt=true;trustServerCertificate=true;";
+    private String USER = "sa";
+    private String PASSWORD = "sa";
 
-    // Constructor - thêm dữ liệu mẫu
-    public DichVuDAO() {
-        // Thêm dữ liệu mẫu để test
-        themDichVu(new DichVu(0, "Giặt khô", 20000, "cái"));
-        themDichVu(new DichVu(0, "Giặt ướt", 15000, "cái"));
-        themDichVu(new DichVu(0, "Giặt hấp", 25000, "cái"));
-        themDichVu(new DichVu(0, "Giặt theo kg", 40000, "kg"));
-        themDichVu(new DichVu(0, "Ủi đồ", 10000, "cái"));
-        themDichVu(new DichVu(0, "Giặt nệm", 80000, "cái"));
+    static {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Không tìm thấy SQLServer JDBC Driver", e);
+        }
     }
 
     // Lấy tất cả dịch vụ
     public List<DichVu> layTatCaDichVu() {
-        return danhSachDichVu;
-    }
+        List<DichVu> list = new ArrayList<>();
+        String sql = "SELECT MaDV, TenDV, GiaTien, DonViTinh,HoTen, NgayNhan, NgayTra FROM DichVu";
+        try (Connection conn = DriverManager.getConnection(connectionUrl, USER, PASSWORD); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
-    // Thêm dịch vụ mới
-    public void themDichVu(DichVu dichVu) {
-        dichVu.setMaDV(nextMaDV++); // Tự động gán mã mới
-        danhSachDichVu.add(dichVu);
-    }
-
-    // Sửa thông tin dịch vụ
-    public void suaDichVu(DichVu dichVu) {
-        for (int i = 0; i < danhSachDichVu.size(); i++) {
-            if (danhSachDichVu.get(i).getMaDV() == dichVu.getMaDV()) {
-                danhSachDichVu.set(i, dichVu);
-                break;
+            while (rs.next()) {
+                DichVu dv = new DichVu();
+                dv.setMaDV(rs.getInt("MaDV"));
+                dv.setTenDV(rs.getString("TenDV"));
+                dv.setGiaTien(rs.getDouble("GiaTien"));
+                dv.setDonViTinh(rs.getString("DonViTinh"));
+                dv.setHoTen(rs.getString("HoTen"));
+                dv.setNgayNhan(rs.getDate("NgayNhan"));
+                dv.setNgayTra(rs.getDate("NgayTra"));
+                list.add(dv);
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi load dữ liệu dịch vụ!");
+        }
+        return list;
+    }
+
+    // Thêm dịch vụ
+    public boolean themDichVu(DichVu dv) {
+        String sql = "INSERT INTO DichVu(TenDV, GiaTien, DonViTinh, HoTen, NgayNhan, NgayTra) VALUES(?, ?, ?, ?, ?, ?)";
+        try (Connection con = DriverManager.getConnection(connectionUrl, USER, PASSWORD); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, dv.getTenDV());
+            ps.setDouble(2, dv.getGiaTien());
+            ps.setString(3, dv.getDonViTinh());
+            ps.setString(4, dv.getHoTen());
+            ps.setDate(5, dv.getNgayNhan() != null ? new java.sql.Date(dv.getNgayNhan().getTime()) : null);
+            ps.setDate(6, dv.getNgayTra() != null ? new java.sql.Date(dv.getNgayTra().getTime()) : null);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+// Sửa dịch vụ
+
+    public boolean suaDichVu(DichVu dv) {
+        String sql = "UPDATE DichVu SET TenDV=?, GiaTien=?, DonViTinh=?, HoTen=?, NgayNhan=?, NgayTra=? WHERE MaDV=?";
+        try (Connection con = DriverManager.getConnection(connectionUrl, USER, PASSWORD); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, dv.getTenDV());
+            ps.setDouble(2, dv.getGiaTien());
+            ps.setString(3, dv.getDonViTinh());
+            ps.setString(4, dv.getHoTen());
+            ps.setDate(5, dv.getNgayNhan() != null ? new java.sql.Date(dv.getNgayNhan().getTime()) : null);
+            ps.setDate(6, dv.getNgayTra() != null ? new java.sql.Date(dv.getNgayTra().getTime()) : null);
+            ps.setInt(7, dv.getMaDV());
+
+            int kq = ps.executeUpdate();
+            return kq > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
-    // Xóa dịch vụ theo mã
-    public void xoaDichVu(int maDV) {
-        for (int i = 0; i < danhSachDichVu.size(); i++) {
-            if (danhSachDichVu.get(i).getMaDV() == maDV) {
-                danhSachDichVu.remove(i);
-                break;
-            }
-        }
-    }
+// Xóa dịch vụ
+    public boolean xoaDichVu(int maDV) {
+        String sql = "DELETE FROM DichVu WHERE MaDV=?";
+        try (Connection con = DriverManager.getConnection(connectionUrl, USER, PASSWORD); PreparedStatement ps = con.prepareStatement(sql)) {
 
-    // Tìm dịch vụ theo mã
-    public DichVu timDichVuTheoMa(int maDV) {
-        for (DichVu dv : danhSachDichVu) {
-            if (dv.getMaDV() == maDV) {
-                return dv;
-            }
+            ps.setInt(1, maDV);
+            int kq = ps.executeUpdate();
+            return kq > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return null;
-    }
-
-    // Tìm dịch vụ theo tên
-    public List<DichVu> timDichVuTheoTen(String ten) {
-        List<DichVu> ketQua = new ArrayList<>();
-        for (DichVu dv : danhSachDichVu) {
-            if (dv.getTenDV().toLowerCase().contains(ten.toLowerCase())) {
-                ketQua.add(dv);
-            }
-        }
-        return ketQua;
-    }
-
-    // Lấy dịch vụ theo khoảng giá
-    public List<DichVu> timDichVuTheoGia(double giaMin, double giaMax) {
-        List<DichVu> ketQua = new ArrayList<>();
-        for (DichVu dv : danhSachDichVu) {
-            if (dv.getGiaTien() >= giaMin && dv.getGiaTien() <= giaMax) {
-                ketQua.add(dv);
-            }
-        }
-        return ketQua;
     }
 }

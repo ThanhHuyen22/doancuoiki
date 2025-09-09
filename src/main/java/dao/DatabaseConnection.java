@@ -12,7 +12,9 @@ public class DatabaseConnection {
 
     // Sửa lại URL/USER/PASSWORD theo môi trường của bạn
     private static final String URL
-            = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyTiemGiatUi;encrypt=true;trustServerCertificate=true;";
+            = "jdbc:sqlserver://DESKTOP-L1OKGPV\\SQLEXPRESS2022:1433;"
+        + "databaseName=QuanLyTiemGiatUi;"
+        + "encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
     private static final String PASSWORD = "sa";
 

@@ -15,79 +15,11 @@ package view;
  */
 public class ThongKeGUI extends javax.swing.JFrame {
 
-//    private ThongKeDAO thongKeDAO = new ThongKeDAO();
-//    private DefaultTableModel tableModel;
-//
-//    public ThongKeGUI() {
-//        initComponents();
-//        setLocationRelativeTo(null);
-//        setTitle("Thống Kê Doanh Thu - Tiệm Giặt Ủi");
-//        initTable();
-//        loadThongKeTongQuan();
-//    }
-//
-//    private void initTable() {
-//        tableModel = (DefaultTableModel) tableThongKe.getModel();
-//        tableModel.setColumnIdentifiers(new String[]{
-//            "STT", "Chỉ tiêu", "Giá trị"
-//        });
-//    }
-//
-//    private void loadThongKeTongQuan() {
-//        tableModel.setRowCount(0);
-//
-//        Map<String, Object> thongKe = thongKeDAO.thongKeTongQuan();
-//
-//        // Thêm dữ liệu vào table
-//        tableModel.addRow(new Object[]{"1", "Tổng doanh thu",
-//            String.format("%,d VNĐ", ((Double) thongKe.get("tongDoanhThu")).intValue())});
-//        tableModel.addRow(new Object[]{"2", "Tổng số đơn hàng", thongKe.get("tongDonHang")});
-//        tableModel.addRow(new Object[]{"3", "Đơn mới", thongKe.get("donMoi")});
-//        tableModel.addRow(new Object[]{"4", "Đang xử lý", thongKe.get("donDangXuLy")});
-//        tableModel.addRow(new Object[]{"5", "Đơn hoàn thành", thongKe.get("donHoanThanh")});
-//        tableModel.addRow(new Object[]{"6", "Đơn đã hủy", thongKe.get("donDaHuy")});
-//        tableModel.addRow(new Object[]{"7", "Tỷ lệ hoàn thành",
-//            String.format("%.1f%%", thongKe.get("tyLeHoanThanh"))});
-//
-//        // Doanh thu hôm nay
-//        double doanhThuHomNay = thongKeDAO.thongKeDoanhThuTheoNgay(new Date());
-//        tableModel.addRow(new Object[]{"8", "Doanh thu hôm nay",
-//            String.format("%,d VNĐ", (int) doanhThuHomNay)});
-//
-//        // Doanh thu tuần này
-//        double doanhThuTuan = thongKeDAO.thongKeDoanhThuTuanHienTai();
-//        tableModel.addRow(new Object[]{"9", "Doanh thu tuần này",
-//            String.format("%,d VNĐ", (int) doanhThuTuan)});
-//
-//        // Doanh thu tháng này
-//        double doanhThuThang = thongKeDAO.thongKeDoanhThuThangHienTai();
-//        tableModel.addRow(new Object[]{"10", "Doanh thu tháng này",
-//            String.format("%,d VNĐ", (int) doanhThuThang)});
-//    }
-//
-//    private void loadThongKeDichVu() {
-//        tableModel.setRowCount(0);
-//        tableModel.setColumnIdentifiers(new String[]{"STT", "Tên dịch vụ", "Số lượng bán"});
-//
-//        Map<String, Integer> dichVuBanChay = thongKeDAO.thongKeDichVuBanChay();
-//        int stt = 1;
-//
-//        for (Map.Entry<String, Integer> entry : dichVuBanChay.entrySet()) {
-//            tableModel.addRow(new Object[]{stt++, entry.getKey(), entry.getValue()});
-//        }
-//    }
-//
-//    private void loadThongKeKhachHang() {
-//        tableModel.setRowCount(0);
-//        tableModel.setColumnIdentifiers(new String[]{"STT", "Khách hàng", "Số đơn"});
-//
-//        Map<String, Integer> khachHangThanThiet = thongKeDAO.thongKeKhachHangThanThiet();
-//        int stt = 1;
-//
-//        for (Map.Entry<String, Integer> entry : khachHangThanThiet.entrySet()) {
-//            tableModel.addRow(new Object[]{stt++, entry.getKey(), entry.getValue()});
-//        }
-//    }
+    public ThongKeGUI() {
+      
+    }
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.

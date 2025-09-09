@@ -1,134 +1,151 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import model.DonHang;
 import model.KhachHang;
 import model.ChiTietDonHang;
-import model.DichVu;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DonHangDAO {
 
-    private List<DonHang> danhSachDonHang = new ArrayList<>();
-    private int nextMaDH = 1;
+    private static final String URL = "jdbc:sqlserver://DESKTOP-L1OKGPV\\SQLEXPRESS2022:1433;databaseName=QuanLyTiemGiatUi;encrypt=true;trustServerCertificate=true;";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "sa";
+
+    private ChiTietDonHangDAO chiTietDAO;
 
     public DonHangDAO() {
-        // Thêm dữ liệu mẫu
-        themDonHangMau();
+        chiTietDAO = new ChiTietDonHangDAO();
     }
 
-    private void themDonHangMau() {
-        // Tạo khách hàng mẫu
-        KhachHangDAO khDAO = new KhachHangDAO();
-        KhachHang kh1 = khDAO.timKhachHangTheoMa(1);
-        KhachHang kh2 = khDAO.timKhachHangTheoMa(2);
-
-        // Tạo dịch vụ mẫu
-        DichVuDAO dvDAO = new DichVuDAO();
-        DichVu dv1 = dvDAO.timDichVuTheoMa(1);
-        DichVu dv2 = dvDAO.timDichVuTheoMa(2);
-        DichVu dv3 = dvDAO.timDichVuTheoMa(5);
-
-        // Tạo chi tiết đơn hàng
-        List<ChiTietDonHang> chiTiet1 = new ArrayList<>();
-        chiTiet1.add(new ChiTietDonHang(dv1, 2));
-        chiTiet1.add(new ChiTietDonHang(dv3, 3));
-
-        List<ChiTietDonHang> chiTiet2 = new ArrayList<>();
-        chiTiet2.add(new ChiTietDonHang(dv2, 1));
-        chiTiet2.add(new ChiTietDonHang(dv1, 1));
-        chiTiet2.add(new ChiTietDonHang(dv3, 2));
-
-        // Tạo đơn hàng mẫu
-        DonHang dh1 = new DonHang(nextMaDH++, kh1, new Date(),
-                new Date(System.currentTimeMillis() + 86400000), chiTiet1, "Đang xử lý");
-
-        DonHang dh2 = new DonHang(nextMaDH++, kh2,
-                new Date(System.currentTimeMillis() - 86400000),
-                new Date(), chiTiet2, "Hoàn thành");
-
-        danhSachDonHang.add(dh1);
-        danhSachDonHang.add(dh2);
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    // Lấy tất cả đơn hàng
     public List<DonHang> layTatCaDonHang() {
-        return danhSachDonHang;
-    }
+        List<DonHang> list = new ArrayList<>();
+        String sql = "SELECT dh.MaDH, dh.MaKH, dh.NgayNhan, dh.NgayTra, dh.TrangThai, dh.TongTien, kh.HoTen, kh.SoDienThoai, kh.DiaChi "
+                + "FROM DonHang dh INNER JOIN KhachHang kh ON dh.MaKH = kh.MaKH ORDER BY dh.MaDH";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-    public void themDonHang(DonHang donHang) {
-        donHang.setMaDH(nextMaDH++);
-        danhSachDonHang.add(donHang);
-    }
+            while (rs.next()) {
+                DonHang dh = new DonHang();
+                dh.setMaDH(rs.getInt("MaDH"));
 
-    public void suaDonHang(DonHang donHang) {
-        for (int i = 0; i < danhSachDonHang.size(); i++) {
-            if (danhSachDonHang.get(i).getMaDH() == donHang.getMaDH()) {
-                danhSachDonHang.set(i, donHang);
-                break;
+                KhachHang kh = new KhachHang();
+                kh.setMaKH(rs.getInt("MaKH"));
+                kh.setHoTen(rs.getString("HoTen"));
+                kh.setSoDienThoai(rs.getString("SoDienThoai"));
+                kh.setDiaChi(rs.getString("DiaChi"));
+                dh.setKhachHang(kh);
+
+                dh.setNgayNhan(rs.getTimestamp("NgayNhan"));
+                dh.setNgayTra(rs.getTimestamp("NgayTra"));
+                dh.setTrangThai(rs.getString("TrangThai"));
+                dh.setTongTien(rs.getDouble("TongTien"));
+
+                // Load chi tiết
+                List<ChiTietDonHang> chiTiet = chiTietDAO.layChiTietTheoDonHang(dh.getMaDH());
+                dh.setChiTietDonHang(chiTiet);
+
+                list.add(dh);
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Thêm đơn hàng
+    public boolean themDonHang(DonHang dh) {
+        String sqlKH = "INSERT INTO KhachHang(HoTen, SoDienThoai, DiaChi) VALUES (?, ?, ?)";
+        String sqlDH = "INSERT INTO DonHang(MaKH, NgayNhan, NgayTra, TrangThai, TongTien) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+
+            // Thêm khách hàng
+            PreparedStatement psKH = conn.prepareStatement(sqlKH, Statement.RETURN_GENERATED_KEYS);
+            psKH.setString(1, dh.getKhachHang().getHoTen());
+            psKH.setString(2, dh.getKhachHang().getSoDienThoai());
+            psKH.setString(3, dh.getKhachHang().getDiaChi());
+            psKH.executeUpdate();
+            ResultSet rs = psKH.getGeneratedKeys();
+            int maKH = 0;
+            if (rs.next()) {
+                maKH = rs.getInt(1);
+            }
+
+            // Thêm đơn hàng
+            PreparedStatement psDH = conn.prepareStatement(sqlDH);
+            psDH.setInt(1, maKH);
+            psDH.setDate(2, new java.sql.Date(dh.getNgayNhan().getTime()));
+            if (dh.getNgayTra() != null) {
+                psDH.setDate(3, new java.sql.Date(dh.getNgayTra().getTime()));
+            } else {
+                psDH.setNull(3, Types.DATE);
+            }
+            psDH.setString(4, dh.getTrangThai());
+            psDH.setDouble(5, dh.getTongTien());
+            psDH.executeUpdate();
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
-    public void xoaDonHang(int maDH) {
-        for (int i = 0; i < danhSachDonHang.size(); i++) {
-            if (danhSachDonHang.get(i).getMaDH() == maDH) {
-                danhSachDonHang.remove(i);
-                break;
-            }
+    // Sửa đơn hàng
+    public boolean suaDonHang(DonHang dh) {
+        String sql = "UPDATE DonHang SET NgayTra=?, TrangThai=? WHERE MaDH=?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, dh.getNgayTra() != null ? new Timestamp(dh.getNgayTra().getTime()) : null);
+            ps.setString(2, dh.getTrangThai());
+            ps.setInt(3, dh.getMaDH());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
+    // Xóa đơn hàng
+    public boolean xoaDonHang(int maDH) {
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+
+            // Xóa chi tiết
+            String sqlCT = "DELETE FROM ChiTietDonHang WHERE MaDH=?";
+            PreparedStatement psCT = conn.prepareStatement(sqlCT);
+            psCT.setInt(1, maDH);
+            psCT.executeUpdate();
+
+            // Xóa đơn hàng
+            String sqlDH = "DELETE FROM DonHang WHERE MaDH=?";
+            PreparedStatement psDH = conn.prepareStatement(sqlDH);
+            psDH.setInt(1, maDH);
+            psDH.executeUpdate();
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Tìm đơn hàng theo mã
     public DonHang timDonHangTheoMa(int maDH) {
-        for (DonHang dh : danhSachDonHang) {
+        List<DonHang> list = layTatCaDonHang();
+        for (DonHang dh : list) {
             if (dh.getMaDH() == maDH) {
                 return dh;
             }
         }
         return null;
-    }
-
-    public List<DonHang> timDonHangTheoKhachHang(String tenKH) {
-        List<DonHang> ketQua = new ArrayList<>();
-        for (DonHang dh : danhSachDonHang) {
-            if (dh.getKhachHang().getHoTen().toLowerCase().contains(tenKH.toLowerCase())) {
-                ketQua.add(dh);
-            }
-        }
-        return ketQua;
-    }
-
-    public List<DonHang> timDonHangTheoTrangThai(String trangThai) {
-        List<DonHang> ketQua = new ArrayList<>();
-        for (DonHang dh : danhSachDonHang) {
-            if (dh.getTrangThai().equalsIgnoreCase(trangThai)) {
-                ketQua.add(dh);
-            }
-        }
-        return ketQua;
-    }
-
-    public double tinhDoanhThuTheoNgay(Date ngay) {
-        double doanhThu = 0;
-        for (DonHang dh : danhSachDonHang) {
-            if (dh.getNgayNhan().equals(ngay) && "Hoàn thành".equals(dh.getTrangThai())) {
-                doanhThu += dh.getTongTien();
-            }
-        }
-        return doanhThu;
-    }
-
-    public double tinhTongDoanhThu() {
-        double tong = 0;
-        for (DonHang dh : danhSachDonHang) {
-            if ("Hoàn thành".equals(dh.getTrangThai())) {
-                tong += dh.getTongTien();
-            }
-        }
-        return tong;
     }
 }

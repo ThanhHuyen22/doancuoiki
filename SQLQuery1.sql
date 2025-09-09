@@ -13,16 +13,21 @@ CREATE TABLE KhachHang (
 );
 GO
 
+DROP TABLE IF EXISTS ChiTietDonHang;
+DROP TABLE IF EXISTS DichVu;
+GO
 -- Bảng Dịch vụ
 CREATE TABLE DichVu (
     MaDV INT IDENTITY(1,1) PRIMARY KEY,
     TenDV NVARCHAR(100) NOT NULL,
     GiaTien DECIMAL(18,2) NOT NULL,
     DonViTinh NVARCHAR(50) NOT NULL,
-    MoTa NVARCHAR(255)
+    HoTen NVARCHAR(100) NULL,       
+    NgayNhan DATE NULL,
+    NgayTra DATE NULL,
+    MoTa NVARCHAR(255) NULL,
 );
 GO
-
 -- Bảng Đơn hàng
 CREATE TABLE DonHang (
     MaDH INT IDENTITY(1,1) PRIMARY KEY,
@@ -35,7 +40,9 @@ CREATE TABLE DonHang (
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
 );
 GO
-
+ALTER TABLE DichVu
+ADD HoTen NVARCHAR(100) NULL;
+GO
 -- Bảng Chi tiết Đơn hàng
 CREATE TABLE ChiTietDonHang (
     MaCT INT IDENTITY(1,1) PRIMARY KEY,
@@ -46,7 +53,7 @@ CREATE TABLE ChiTietDonHang (
     ThanhTien DECIMAL(18,2) NOT NULL,
     MoTa NVARCHAR(255),
     FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH),
-    FOREIGN KEY (MaDV) REFERENCES DichVu(MaDV)
+    FOREIGN KEY (MaDV) REFERENCES DichVu(MaDV) ON DELETE CASCADE
 );
 GO
 
@@ -75,16 +82,14 @@ VALUES
 GO
 
 -- Thêm dữ liệu Dịch vụ
-INSERT INTO DichVu (TenDV, GiaTien, DonViTinh, MoTa) 
-VALUES 
-(N'Giặt khô', 20000, N'Cái', N'Giặt khô công nghiệp'),
-(N'Giặt ướt', 15000, N'Cái', N'Giặt thường'),
-(N'Giặt hấp', 25000, N'Cái', N'Giặt và hấp là'),
-(N'Giặt theo kg', 40000, N'Kg', N'Giặt theo trọng lượng'),
-(N'Ủi đồ', 10000, N'Cái', N'Ủi phẳng'),
-(N'Giặt nệm', 80000, N'Cái', N'Giặt nệm lớn'),
-(N'Giặt giày', 30000, N'Đôi', N'Giặt và vệ sinh giày'),
-(N'Giặt gấu bông', 35000, N'Cái', N'Giặt đồ chơi nhồi bông');
+
+INSERT INTO DichVu (TenDV, GiaTien, DonViTinh, HoTen, NgayNhan, NgayTra, MoTa, MoTaChiTiet)
+VALUES
+(N'Giặt áo vest', 50000, N'Cái', N'Nguyễn Văn An', '2024-09-05', '2024-09-06', N'Giặt sạch áo vest cao cấp', N'Áo vest giặt kỹ, phẳng đẹp'),
+(N'Ủi quần tây', 15000, N'Cái', N'Trần Thị Bình', '2024-09-06', '2024-09-07', N'Ủi phẳng quần tây', N'Ủi phẳng quần tây sau giặt'),
+(N'Giặt rèm cửa', 120000, N'Cái', N'Lê Văn Cường', '2024-09-07', '2024-09-08', N'Giặt rèm cửa lớn', N'Rèm cửa giặt sạch, thơm'),
+(N'Giặt sofa', 300000, N'Bộ', N'Phạm Thị Dung', '2024-09-08', '2024-09-09', N'Giặt sofa tại nhà', N'Giặt sofa 3-4 chỗ ngồi'),
+(N'Giặt chăn ga', 80000, N'Cái', N'Hoàng Văn Em', '2024-09-09', '2024-09-10', N'Giặt sạch chăn ga', N'Chăn ga giặt sạch, thơm mát');
 GO
 
 -- Thêm dữ liệu Đơn hàng
@@ -289,9 +294,8 @@ SELECT * FROM KhachHang;
 GO
 
 -- Kiểm tra dữ liệu dịch vụ
-SELECT * FROM DichVu;
+SELECT * FROM DichVu
 GO
-
 -- Kiểm tra dữ liệu đơn hàng
 SELECT * FROM DonHang;
 GO
@@ -307,6 +311,10 @@ GO
 -- Kiểm tra view dịch vụ bán chạy
 SELECT * FROM vw_DichVuBanChay;
 GO
+-------
+
+
+
 
 PRINT '✅ Database QuanLyTiemGiatUi đã được tạo thành công!';
 PRINT '✅ Dữ liệu mẫu đã được thêm vào!';

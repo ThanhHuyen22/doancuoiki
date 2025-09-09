@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
@@ -29,6 +25,13 @@ public class DonHang {
         this.chiTietDonHang = chiTietDonHang;
         this.trangThai = trangThai;
         this.tongTien = tinhTongTien();
+    }
+
+    // Constructor mới với tham số tongTien
+    public DonHang(int maDH, KhachHang khachHang, Date ngayNhan, Date ngayTra,
+            List<ChiTietDonHang> chiTietDonHang, String trangThai, double tongTien) {
+        this(maDH, khachHang, ngayNhan, ngayTra, chiTietDonHang, trangThai); // Gọi constructor khác
+        this.tongTien = tongTien;
     }
 
     private double tinhTongTien() {
@@ -80,7 +83,7 @@ public class DonHang {
 
     public void setChiTietDonHang(List<ChiTietDonHang> chiTietDonHang) {
         this.chiTietDonHang = chiTietDonHang;
-        this.tongTien = tinhTongTien();
+        this.tongTien = tinhTongTien(); // Tính lại tổng tiền khi cập nhật chi tiết
     }
 
     public String getTrangThai() {
@@ -93,5 +96,9 @@ public class DonHang {
 
     public double getTongTien() {
         return tongTien;
+    }
+
+    public void setTongTien(double tongTien) {
+        this.tongTien = tongTien;
     }
 }

@@ -1,8 +1,0 @@
-1;Nguyễn Văn Đạt;0912345678;123 đường ABC, Quận 1
-2;Trần Thị Bình;0987654321;456 đường XYZ, Quận 2
-3;Lê Văn Cường;0905123456;789 đường DEF, Quận 3
-4;Đinh Thiên Bảo;0905123456;789 đường Gò Vấp, Quận 12
-5;Phạm Thanh Huyền;0985405359;789 đường Hà Nội, Quận 13
-6;bảo bảo;54635635y6;đường hà nội
-7;Thạch Hiền;0985405359;168/6 Đường 2 bà chưng
-8;Thạch Hiền;0985405359;168/6 Đường 2 bà chưng

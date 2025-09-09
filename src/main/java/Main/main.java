@@ -6,11 +6,12 @@ package main;
 
 import view.MainFramee;
 import javax.swing.SwingUtilities;
+import view.Login;
 
 public class main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFramee().setVisible(true);
+            new Login().setVisible(true);
         });
     }
 }

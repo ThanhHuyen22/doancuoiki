@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
+
+import java.util.Date;
 
 public class DichVu {
 
@@ -10,17 +8,22 @@ public class DichVu {
     private String tenDV;
     private double giaTien;
     private String donViTinh;
+    private String hoTen;   
+    private Date ngayNhan;
+    private Date ngayTra;
 
-    // Constructor mặc định
     public DichVu() {
     }
 
-    // Constructor đầy đủ tham số
-    public DichVu(int maDV, String tenDV, double giaTien, String donViTinh) {
+    public DichVu(int maDV, String tenDV, double giaTien, String donViTinh,
+                  String hoTen, Date ngayNhan, Date ngayTra) {
         this.maDV = maDV;
         this.tenDV = tenDV;
         this.giaTien = giaTien;
         this.donViTinh = donViTinh;
+        this.hoTen = hoTen;
+        this.ngayNhan = ngayNhan;
+        this.ngayTra = ngayTra;
     }
 
     // Getter và Setter
@@ -54,5 +57,29 @@ public class DichVu {
 
     public void setDonViTinh(String donViTinh) {
         this.donViTinh = donViTinh;
+    }
+
+    public String getHoTen() {
+        return hoTen;
+    }
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
+
+    public Date getNgayNhan() {
+        return ngayNhan;
+    }
+
+    public void setNgayNhan(Date ngayNhan) {
+        this.ngayNhan = ngayNhan;
+    }
+
+    public Date getNgayTra() {
+        return ngayTra;
+    }
+
+    public void setNgayTra(Date ngayTra) {
+        this.ngayTra = ngayTra;
     }
 }
